@@ -24,9 +24,16 @@ class Population {
         this.totalPassengers = this.setupPassengerTotal(this.passengerMatrix)
         let linesAux =  [[0, 7, 5, 4, 1, 3, 2, 6], [5, 6, 3, 2, 4, 7, 1, 0], [7, 1, 4, 0, 6, 2, 5, 3], [1, 5, 3, 2, 0, 7, 6, 4]]
         for (let i = 0; i < this.lines.length; i++) {
+            let arr = [];
+            while(arr.length < 8){
+                var r = Math.floor(Math.random() * 8);
+                if(arr.indexOf(r) === -1) arr.push(r);
+            }
             //TODO AGREGAR RANDOM SAMPLE DE 0 A AVENIDESCOUNT
-            this.lines[i] = new Line(linesAux[i]);
+            this.lines[i] = new Line(arr);
+            arr = undefined
         }
+        console.log(this.lines)
        
     }
 
@@ -96,31 +103,35 @@ class Population {
     //Funcion en la cual se realiza la seleccion para futuras generaciones 
     //basandonos en los resultados de la anteiror simulacion
     naturalSelection() {
-        //Generamos un arreglo de nuevos lines
+        try {
+             //Generamos un arreglo de nuevos lines
         let newLines = new Array(this.lines.length);
         //Calculamos el fitness total
         this.calculateFitnessSum();
         //Seteamos el mejor line de la generacion
         this.setBestLine();
-        console.log('before',this.lines)
         //Colocamos el mejor line de la generacion en el nuevo arreglo
         newLines[0] = this.lines[this.bestLine].returnBaby();
         newLines[0].isBest = true;
         //Para cada line, vemos que padre es seleccionado 
-        let corte = Math.random() * Number(this.distancesMatrix.length*0.3)
-        console.log('corte', corte)
+        let corte = Math.floor(Math.random() * this.distancesMatrix.length*0.3)
+    
         for (let i = 1; i < newLines.length; i++) {
             let parent = this.selectParent().returnBaby();
             let aux2 = parent.pathArray.slice(corte,parent.pathArray.length)
-            let corte_aux = this.lines[i].pathArray.splice(0,corte)
+            let corte_aux = this.lines[i].returnBaby().pathArray.slice(0,corte)
             let suma2 = corte_aux.concat(aux2)
             newLines[i] = new Line(suma2); //El padre retorna un line hijo con su herencia
         }
         //Reemplazamos los antiguos lines con los nuevos
         this.lines = [].concat(newLines)
-        console.log(this.lines.length)
+        //console.log(this.lines.length)
         //Pasamos a la siguiente generacion
         this.gen++;
+        } catch (error) {
+            console.log('error',error)
+        }
+       
     }
 
     //Calcular la suma total del fitness
@@ -175,7 +186,6 @@ class Population {
         this.minStep = this.lines[this.bestLine].fitness;
         //Se asigna a la variable global el maximo de comida recolectada por el line
         this.maxLocated = this.lines[this.bestLine].passengers;
-        console.log("step: ", this.minStep);
     }
 
 }

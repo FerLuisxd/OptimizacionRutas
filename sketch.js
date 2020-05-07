@@ -27,29 +27,30 @@ function setup() {
 }
 //Funcion para dibujar los componentes
 function draw() {
-  if(start){
   background(255);
   fill(255, 0, 0);
+  if(start){
+
 
   //Condicional para realizar las actualizaciones correspondientes
-  if (starto) {
+    for (let i = 0; i < 10; i++) {
     // Se selecciona 
+    test.printData()
     test.naturalSelection();
     // Mutamos los hijos
     test.mutateBabies();
     // Reestablecemos de la posicion de los fantasmas
     maxLocated = test.maxLocated
-    starto = false
-    test.calculateFitnessSum()
-    test.printData()
+    start = false
+    }
+
   }
-  test.update();
-  test.show();
+  // test.update();
+  // test.show();
   text("generation: " + test.gen, 20, 20);
   text("Last maxLocated: " + maxLocated + " out of " + totalPassengers, 20, 50);
-//   text("maxFitness: " + test.minStep, 20, 30);
+  text("maxFitness: " + test.minStep, 20, 30);
   text("Fps: " + frameRate(), 20, 40);
-  }
 }
 
 //Funcion para dar click al mouse

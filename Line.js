@@ -35,7 +35,16 @@ class Line {
         return baby;
     }
     mutate() {
-        
+        let mutationRate = 0.1
+        for (let i = 0; i < this.pathArray.length; i++) {
+            if(Math.random()< mutationRate){
+                let aux = this.pathArray[i]
+                let newPos = Math.floor(Math.random() * 8)
+                this.pathArray[i] = this.pathArray[newPos]
+                this.pathArray[newPos] = aux
+            }
+        }
+        this.pathArray
     }
     calcFitness(){
         let fitnessMul = 1.0
@@ -45,7 +54,6 @@ class Line {
         for (let i = 0; i < distancesMatrix.length-1; i++) {
             if(knownCities.includes(this.pathArray[i])){
                 fitnessMul = fitnessMul * 0.85
-                console.log('me repeti', i , knownCities)
             }
             else 
                 knownCities.push(this.pathArray[i])
