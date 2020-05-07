@@ -45,7 +45,6 @@ def Generar():
         linesArray.append(random.sample([x for x in range(0,8)],avenidesCount))    
     return linesArray
 
-linesArray = Generar()
 
 
 def Fitness2(linesArray, totalFitness):
@@ -67,7 +66,7 @@ def Fitness2(linesArray, totalFitness):
             passengers += passengerMatrix[iIndex][jIndex]
             if(iIndex in knownCities):
                 fitnessMul = fitnessMul * 0.85
-                print("me repeti xd", jIndex, knownCities)
+                print("me repeti xd", iIndex, knownCities)
             else:
                 knownCities.append(iIndex)    
             if(jIndex in knownCities):
@@ -92,7 +91,6 @@ def Fitness2(linesArray, totalFitness):
     return fitnessArray, totalFitness
 
 
-fitnessArray,totalFitness = Fitness2(linesArray, totalFitness)
 
 def SelectBest(fitnessArray,bestIndex):    
     mayor = -1
@@ -102,24 +100,6 @@ def SelectBest(fitnessArray,bestIndex):
             bestIndex = i        
         
     return bestIndex
-
-bestIndex = SelectBest(fitnessArray,bestIndex)
-fitnessArray[0]=  fitnessArray[bestIndex]
-linesArray[0] = linesArray[bestIndex]
-print("totalFitness", totalFitness)
-
-
-#linesArray, fitnessArray = Seleccion(linesArray, fitnessArray)
-print("_______Lineas y fitness______")
-print(linesArray)
-print(fitnessArray)
-
-
-# linesArray, fitnessArray = Ordenar(linesArray, fitnessArray)
-
-print("misc ",len(linesArray),avenidesCount)
-
-print("Cruce")
 
 def selectParent(fitnessArray,max):
     rand =  random.uniform(0,max)
@@ -144,15 +124,7 @@ def Cruce2(linesArray,max,fitnessArray):
         linesArray[i] = suma2
     print("El número Random para corte es: ", corte)
     return linesArray 
-    
 
-
-linesArray = Cruce2(linesArray,totalFitness,fitnessArray)
-print("___Cruzados____")
-print(linesArray)
-print(fitnessArray)
-
-print("Mutacion")
 def Mutacion(linesArray):
     aux = 0     
     for i in range(1, linesCount):
@@ -162,14 +134,43 @@ def Mutacion(linesArray):
         linesArray[i][index[1]] = aux
         print(index)
         index = []
-    return linesArray
-linesArray = Mutacion(linesArray)
-fitnessArray,totalFitness = Fitness2(linesArray,totalFitness)
+    return linesArray  
 
+linesArray = Generar()
+fitnessArray,totalFitness = Fitness2(linesArray, totalFitness)
+
+
+
+print("totalFitness", totalFitness)
+
+
+#linesArray, fitnessArray = Seleccion(linesArray, fitnessArray)
+print("_______Lineas y fitness______")
+print(linesArray)
+print(fitnessArray)
+
+bestIndex = SelectBest(fitnessArray,bestIndex)
+nextGenFitnessArray = [0] * len(fitnessArray)
+nextGenLinesArray = [0] * len(linesArray)
+
+
+print("Cruce")
+nextGenLinesArray = Cruce2(linesArray,totalFitness,fitnessArray)
+
+print("___Cruzados____")
+print(nextGenLinesArray)
+print(nextGenFitnessArray)
+
+print("Mutacion")
+
+nextGenLinesArray = Mutacion(linesArray)
+nextGenFitnessArray,totalFitness = Fitness2(linesArray,totalFitness)
+nextGenFitnessArray[0]=  fitnessArray[bestIndex]
+nextGenLinesArray[0] = linesArray[bestIndex].copy()
 
 # linesArray, fitnessArray = Ordenar(linesArray, fitnessArray)
-print("FIN DE UNA GENERACION - LINEAS: ", linesArray)
-print("FIN DE UNA GENERACION - FITNESS: ",fitnessArray)
+print("FIN DE UNA GENERACION - LINEAS: ", nextGenLinesArray)
+print("FIN DE UNA GENERACION - FITNESS: ",nextGenFitnessArray)
 
 # LUEGO DE ESTO PODEMOS CONSERVAR A LOS DOS MAS FUERTES O REEMPLAZAR AL 50% MAS DEBIL CON LINEAS ALEATORIAS #
 # SE REPITE EL PROCESO CON LA NUEVA GENERACION # 
