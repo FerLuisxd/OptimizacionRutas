@@ -30,11 +30,9 @@ print("Total Pasajeros: ", passengersTotal)
 
 linesArray = []
 passengerArray = []
-distanceArray = []
 avenidesCount = len(distancesMatrix)
 # Esto puede ser random o igual a avenides count
 linesCount = int(avenidesCount/2)
-totalDistance = 0
 totalFitness =  0
 fitnessArray = []
 bestIndex = 0
@@ -60,18 +58,18 @@ def Fitness2(linesArray, totalFitness):
         fitnessMul = 1.0
         # Sumamos la distancia y pasajeros
         for j in range(0, avenidesCount, 2):
-            iIndex = linesArray[i][j]
-            jIndex = linesArray[i][j+1]
+            iIndex = linesArray[i][j]  # El primero
+            jIndex = linesArray[i][j+1] # El segundo
             distance += distancesMatrix[iIndex][jIndex]
             passengers += passengerMatrix[iIndex][jIndex]
             if(iIndex in knownCities):
                 fitnessMul = fitnessMul * 0.85
-                print("me repeti xd", iIndex, knownCities)
+                print("me repeti", iIndex, knownCities)
             else:
                 knownCities.append(iIndex)    
             if(jIndex in knownCities):
                 fitnessMul = fitnessMul * 0.85
-                print("me repeti xd", jIndex, knownCities)    
+                print("me repeti", jIndex, knownCities)    
             else:
                 knownCities.append(jIndex)          
         distanceArrayAux.append(distance)
