@@ -1,7 +1,7 @@
-from random import sample
 import random
 
-distancias=[[0,101,42,76,24,38,89,110],
+#Volver random estas matrices
+distancesMatrix=[[0,101,42,76,24,38,89,110],
             [101,0,107,39,77,69,92,33],
             [42,107,0,72,52,38,97,116],
             [76,39,72,0,86,38,131,44],
@@ -10,7 +10,7 @@ distancias=[[0,101,42,76,24,38,89,110],
             [89,92,97,131,65,93,0,125],
             [110,33,116,44,86,78,125,0]]
 
-pasajeros=[[0,9,6,10,4,54,21,51],
+passengerMatrix=[[0,9,6,10,4,54,21,51],
            [28,0,16,44,4,41,4,24],
            [26,51,0,50,14,56,16,1],
            [39,14,12,0,25,40,52,8],
@@ -19,150 +19,168 @@ pasajeros=[[0,9,6,10,4,54,21,51],
            [35,37,25,5,32,9,0,3],
            [43,4,27,17,6,42,9,0]]
 
-poblacion_pasajeros = 0
-for i in range(len(pasajeros)):
-    for j in range(len(pasajeros)):
-        poblacion_pasajeros+=pasajeros[i][j]
-print("Total Pasajeros: ", poblacion_pasajeros)
 
-ListaLineas = []
-ListaPasajeros = []
-ListaDistancia = []
-cant_avenidas = len(distancias)
-cant_lineas = int(cant_avenidas/2)
-total_general_distancia = 0
-ListaFitness = []
-indice_mayor = 0
+# Se calcula el maximo de ploblacion
+passengersTotal = 0
+for i in range(len(passengerMatrix)):
+    for j in range(len(passengerMatrix)):
+        passengersTotal+=passengerMatrix[i][j]
+print("_____Metadata_____")
+print("Total Pasajeros: ", passengersTotal)
+
+linesArray = []
+passengerArray = []
+distanceArray = []
+avenidesCount = len(distancesMatrix)
+# Esto puede ser random o igual a avenides count
+linesCount = int(avenidesCount/2)
+totalDistance = 0
+totalFitness =  0
+fitnessArray = []
+bestIndex = 0
 
 def Generar():
-    ListaLineas = []    
-    for i in range(cant_lineas):
-        ListaLineas.append(sample([x for x in range(0,8)],cant_avenidas))    
-    return ListaLineas
+    linesArray = []    
+    for i in range(linesCount):
+        linesArray.append(random.sample([x for x in range(0,8)],avenidesCount))    
+    return linesArray
 
-ListaLineas = Generar()
 
-def Fitness(ListaLineas):
-    lista_fitness =[]
+
+def Fitness2(linesArray, totalFitness):
+    fitnessArray = []
     fitness = 0
-    lista_distancias = []
-    lista_pasajeros = []    
-    total_general_distancia = 0    
-    for i in range(cant_lineas):
-        total_distancia = 0
-        total_pasajeros = 0
-        for j in range(0, cant_avenidas, 2):
-            total_distancia += distancias[ListaLineas[i][j]][ListaLineas[i][j+1]]
-            total_pasajeros += pasajeros[ListaLineas[i][j]][ListaLineas[i][j+1]]            
-            total_general_distancia += total_distancia
-        lista_distancias.append(total_distancia)
-        lista_pasajeros.append(total_pasajeros)
+    distanceArrayAux = [] 
+    passengerArrayAux = [] 
+    #Calc generation
+    for i in range(linesCount):
+        distance=  0
+        passengers = 0
+        knownCities = []
+        fitnessMul = 1.0
+        # Sumamos la distancia y pasajeros
+        for j in range(0, avenidesCount, 2):
+            iIndex = linesArray[i][j]
+            jIndex = linesArray[i][j+1]
+            distance += distancesMatrix[iIndex][jIndex]
+            passengers += passengerMatrix[iIndex][jIndex]
+            if(iIndex in knownCities):
+                fitnessMul = fitnessMul * 0.85
+                print("me repeti xd", iIndex, knownCities)
+            else:
+                knownCities.append(iIndex)    
+            if(jIndex in knownCities):
+                fitnessMul = fitnessMul * 0.85
+                print("me repeti xd", jIndex, knownCities)    
+            else:
+                knownCities.append(jIndex)          
+        distanceArrayAux.append(distance)
+        print("distancias:", distance)
+        passengerArrayAux.append(passengers)
+        print("pasajeros:",  passengers)         
+        fitness = (passengers/distance    * passengers/passengersTotal * 100)
+        totalFitness += fitness
+        fitnessArray.append(fitness)   
+        print("fitness: ", fitness)
     print("...Calculando Distancias y Pesos...")    
     print("Lista Distancias, Lista Pasajeros, Total General Distancia")        
-    print(lista_distancias, lista_pasajeros, total_general_distancia)
-    
+    print(distanceArrayAux, passengerArrayAux)
 
     ## CALCULAR FITNESS
-    print("total_pasajeros:",  poblacion_pasajeros)    
-    for i in range(cant_lineas):
-        print("distancias:", lista_distancias[i])
-        print("pasajeros:",  lista_pasajeros[i])         
-        print("fitness: ", (lista_pasajeros[i]/poblacion_pasajeros + (1-(lista_distancias[i]/total_general_distancia))))
-        print("")
-        fitness = (lista_pasajeros[i]/poblacion_pasajeros + (1-(lista_distancias[i]/total_general_distancia)))
-        lista_fitness.append(fitness)
-    
-    return lista_fitness
-
-ListaFitness = Fitness(ListaLineas)
-
-print(ListaLineas)
-print("...........")
+    print("passengersTotal:",  passengersTotal)    
+    return fitnessArray, totalFitness
 
 
-def Seleccion(ListaLineas, ListaFitness):    
+
+def SelectBest(fitnessArray,bestIndex):    
     mayor = -1
-    indice_mayor = 0
-    menor = 999
-    indice_menor = 0
-    for i in range(cant_lineas):        
-        if (menor > ListaFitness[i]):
-            menor = ListaFitness[i]
-            indice_menor = i
+    for i in range(linesCount):        
+        if (mayor < fitnessArray[i]):
+            mayor = fitnessArray[i]
+            bestIndex = i        
+        
+    return bestIndex
 
-        if (mayor < ListaFitness[i]):
-            mayor = ListaFitness[i]
-            indice_mayor = i        
-    
-    
-    ListaLineas[indice_menor], ListaFitness[indice_menor] = ListaLineas[indice_mayor], ListaFitness[indice_mayor]
-    
-    return ListaLineas, ListaFitness
+def selectParent(fitnessArray,max):
+    rand =  random.uniform(0,max)
+    sum = 0
+    for i in range(linesCount):
+        sum += fitnessArray[i]
+        if(sum > rand):
+            print('seleccionado', i,rand,max)
+            return i
 
-
-ListaLineas, ListaFitness = Seleccion(ListaLineas, ListaFitness)
-print("...........")
-print(ListaLineas)
-print("...........")
-print(ListaFitness)
-
-def Ordenar(ListaLineas, ListaFitness): #se que se puede ordenar de mejor manera pero tengo sueño
-    for i in range(cant_lineas):
-        for j in range(cant_lineas-1):
-            if (ListaFitness[j] < ListaFitness[j+1]):
-                aux = ListaLineas[j]
-                ListaLineas[j] = ListaLineas[j+1]
-                ListaLineas[j+1] = aux
-    ListaFitness.sort(reverse=True)
-
-    return ListaLineas, ListaFitness
-
-ListaLineas, ListaFitness = Ordenar(ListaLineas, ListaFitness)
-
-print("Cruce")
-def Cruce(ListaLineas):
+def Cruce2(linesArray,max,fitnessArray):
     aux = []
     aux2 = []
     corte_aux = []
     corte_aux2 = []
-    corte = random.randint(1, cant_avenidas-1)
-    for i in range(1, cant_lineas-1, 1):
-        aux = ListaLineas[i][corte:]
-        aux2 = ListaLineas[i+1][corte:]
-        corte_aux = ListaLineas[i][:corte]
-        corte_aux2 = ListaLineas[i+1][:corte]
-        suma1 = corte_aux2 + aux
+    corte = random.randint(0,int(avenidesCount*0.3))
+    for i in range(1, linesCount):
+        rand = selectParent(fitnessArray,max)
+        aux2 = linesArray[rand][corte:]
+        corte_aux = linesArray[i][:corte]
         suma2 = corte_aux + aux2
-        ListaLineas[i] = suma2
-        ListaLineas[i+1] = suma1
+        linesArray[i] = suma2
     print("El número Random para corte es: ", corte)
-    return ListaLineas 
+    return linesArray 
 
-ListaLineas = Cruce(ListaLineas)
-ListaFitness = Fitness(ListaLineas)
-ListaLineas, ListaFitness = Ordenar(ListaLineas, ListaFitness)
-print(ListaLineas)
-print(ListaFitness)
-
-print("Mutacion")
-def Mutacion(ListaLineas):
+def Mutacion(linesArray):
     aux = 0     
-    for i in range(1, cant_lineas):
-        index = (sample([x for x in range(0,8)],2))           
-        aux = ListaLineas[i][index[0]]
-        ListaLineas[i][index[0]] = ListaLineas[i][index[1]]
-        ListaLineas[i][index[1]] = aux
+    for i in range(1, linesCount):
+        index = (random.sample([x for x in range(0,8)],2))           
+        aux = linesArray[i][index[0]]
+        linesArray[i][index[0]] = linesArray[i][index[1]]
+        linesArray[i][index[1]] = aux
         print(index)
         index = []
-    return ListaLineas
-ListaLineas = Mutacion(ListaLineas)
-ListaFitness = Fitness(ListaLineas)
+    return linesArray  
 
-ListaLineas, ListaFitness = Ordenar(ListaLineas, ListaFitness)
-print("FIN DE UNA GENERACION - LINEAS: ", ListaLineas)
-print("FIN DE UNA GENERACION - FITNESS: ",ListaFitness)
+linesArray = Generar()
+fitnessArray,totalFitness = Fitness2(linesArray, totalFitness)
+
+
+
+print("totalFitness", totalFitness)
+
+
+#linesArray, fitnessArray = Seleccion(linesArray, fitnessArray)
+print("_______Lineas y fitness______")
+print(linesArray)
+print(fitnessArray)
+
+bestIndex = SelectBest(fitnessArray,bestIndex)
+nextGenFitnessArray = [0] * len(fitnessArray)
+nextGenLinesArray = [0] * len(linesArray)
+
+
+print("Cruce")
+nextGenLinesArray = Cruce2(linesArray,totalFitness,fitnessArray)
+
+print("___Cruzados____")
+print(nextGenLinesArray)
+print(nextGenFitnessArray)
+
+print("Mutacion")
+
+nextGenLinesArray = Mutacion(linesArray)
+nextGenFitnessArray,totalFitness = Fitness2(linesArray,totalFitness)
+nextGenFitnessArray[0]=  fitnessArray[bestIndex]
+nextGenLinesArray[0] = linesArray[bestIndex].copy()
+
+# linesArray, fitnessArray = Ordenar(linesArray, fitnessArray)
+print("FIN DE UNA GENERACION - LINEAS: ", nextGenLinesArray)
+print("FIN DE UNA GENERACION - FITNESS: ",nextGenFitnessArray)
 
 # LUEGO DE ESTO PODEMOS CONSERVAR A LOS DOS MAS FUERTES O REEMPLAZAR AL 50% MAS DEBIL CON LINEAS ALEATORIAS #
 # SE REPITE EL PROCESO CON LA NUEVA GENERACION # 
 
 
+# GENERAR
+
+# LOOP:
+# CALCULAR
+# SELECCIONAR MEJOR
+# CLONAMOS ( REPRODUCIMOS)
+# MUTAMOS
+# GOTO LOOP
