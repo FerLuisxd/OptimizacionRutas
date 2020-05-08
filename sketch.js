@@ -20,7 +20,7 @@ let starto = true
 function setup() {
   createCanvas(windowWidth*factor, windowHeight*factor);
   frameRate(fr);
-  test = new Population(50)
+  test = new Population(20,8)
   distancesMatrix = test.distancesMatrix
   passengerMatrix = test.passengerMatrix
   totalPassengers = test.totalPassengers
@@ -33,7 +33,7 @@ function draw() {
 
 
   //Condicional para realizar las actualizaciones correspondientes
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
     // Se selecciona 
     test.printData()
     test.naturalSelection();

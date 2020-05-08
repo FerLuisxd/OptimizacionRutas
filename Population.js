@@ -13,11 +13,12 @@ class Population {
     distancesMatrix 
     passengerMatrix
     totalPassengers
+    distanceLength
 
-    constructor(size) {
+    constructor(size, distanceLength) {
         this.lines = new Array(size); //Arreglo de lineas
         console.log(width, height)
-
+        this.distanceLength = distanceLength
 
         this.distancesMatrix = this.setupDistancesMatrix()
         this.passengerMatrix = this.setupPassengerMatrix()
@@ -37,6 +38,14 @@ class Population {
     }
 
     setupDistancesMatrix() {
+        let array = new Array(this.distanceLength)
+        for (let i = 0; i < array.length; i++) {
+            array[i] = new Array(this.distanceLength)
+            for (let j = 0; j < array[i].length; j++) {
+                if(i == j) array[i][j] = 0
+                else array[i][j] = Math.floor(Math.random() * 201);  
+            }
+        }
         let distancesMatrix = [
             [0, 101, 42, 76, 24, 38, 89, 110],
             [101, 0, 107, 39, 77, 69, 92, 33],
@@ -47,9 +56,17 @@ class Population {
             [89, 92, 97, 131, 65, 93, 0, 125],
             [110, 33, 116, 44, 86, 78, 125, 0]
         ]
-        return distancesMatrix
+        console.log(array,distancesMatrix)
+        return array
     }
     setupPassengerMatrix() {
+        let array = new Array(this.distanceLength)
+        for (let i = 0; i < array.length; i++) {
+            array[i] = new Array(this.distanceLength)
+            for (let j = 0; j < array[i].length; j++) {
+                array[i][j] = Math.floor(Math.random() * 51);  
+            }
+        }
         let passengerMatrix = [
             [0, 9, 6, 10, 4, 54, 21, 51],
             [28, 0, 16, 44, 4, 41, 4, 24],
@@ -60,6 +77,7 @@ class Population {
             [35, 37, 25, 5, 32, 9, 0, 3],
             [43, 4, 27, 17, 6, 42, 9, 0]
         ]
+        console.log(array,passengerMatrix)
         return passengerMatrix
     }
     setupPassengerTotal(passengerMatrix){
@@ -117,10 +135,10 @@ class Population {
     
         for (let i = 1; i < newLines.length; i++) {
             let parent = this.selectParent().returnBaby();
-            let aux2 = parent.pathArray.slice(corte,parent.pathArray.length)
-            let corte_aux = this.lines[i].returnBaby().pathArray.slice(0,corte)
-            let suma2 = corte_aux.concat(aux2)
-            suma2 = parent.pathArray
+            // let aux2 = parent.pathArray.slice(corte,parent.pathArray.length)
+            // let corte_aux = this.lines[i].returnBaby().pathArray.slice(0,corte)
+            // let suma2 = corte_aux.concat(aux2)
+            let suma2 = parent.pathArray
             newLines[i] = new Line(suma2); //El padre retorna un line hijo con su herencia
         }
         //Reemplazamos los antiguos lines con los nuevos
