@@ -22,7 +22,6 @@ class Population {
         this.distancesMatrix = this.setupDistancesMatrix()
         this.passengerMatrix = this.setupPassengerMatrix()
         this.totalPassengers = this.setupPassengerTotal(this.passengerMatrix)
-        let linesAux =  [[0, 7, 5, 4, 1, 3, 2, 6], [5, 6, 3, 2, 4, 7, 1, 0], [7, 1, 4, 0, 6, 2, 5, 3], [1, 5, 3, 2, 0, 7, 6, 4]]
         for (let i = 0; i < this.lines.length; i++) {
             let arr = [];
             while(arr.length < 8){
@@ -121,6 +120,7 @@ class Population {
             let aux2 = parent.pathArray.slice(corte,parent.pathArray.length)
             let corte_aux = this.lines[i].returnBaby().pathArray.slice(0,corte)
             let suma2 = corte_aux.concat(aux2)
+            suma2 = parent.pathArray
             newLines[i] = new Line(suma2); //El padre retorna un line hijo con su herencia
         }
         //Reemplazamos los antiguos lines con los nuevos

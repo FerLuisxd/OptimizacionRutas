@@ -35,7 +35,7 @@ class Line {
         return baby;
     }
     mutate() {
-        let mutationRate = 0.1
+        let mutationRate = 0.3
         for (let i = 0; i < this.pathArray.length; i++) {
             if(Math.random()< mutationRate){
                 let aux = this.pathArray[i]
@@ -53,13 +53,13 @@ class Line {
         this.passengers = 0
         for (let i = 0; i < distancesMatrix.length-1; i++) {
             if(knownCities.includes(this.pathArray[i])){
-                fitnessMul = fitnessMul * 0.85
+                fitnessMul = fitnessMul * 0.70
             }
             else 
                 knownCities.push(this.pathArray[i])
             this.distance += distancesMatrix[this.pathArray[i]][this.pathArray[i+1]]
             this.passengers += passengerMatrix[this.pathArray[i]][this.pathArray[i+1]]
         }
-        this.fitness = (this.passengers/this.distance    * this.passengers/totalPassengers * 100)
+        this.fitness = (this.passengers/this.distance    * this.passengers/totalPassengers * 100) * fitnessMul
     }
 }
