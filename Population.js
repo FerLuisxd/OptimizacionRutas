@@ -1,13 +1,9 @@
 class Population {
     lines; //Arreglo de lineas
-    buildings; //Arreglo de obstaculos
     fitnessSum; //La suma total del fitness
     gen = 1; //El gen en el que nos encontramos actualmente
     bestLine = 0; //El mejor line de la anterior simulacion
-    foods = 0; //La cantidad de comida que se colocara en el mapa
     minStep = 0; //
-    ghosts; //Arreglo de fantasmas
-    ghostV = 1; //Velocidad maxima de los fantasmas
     maxLocated = 0;
 
     distancesMatrix 
