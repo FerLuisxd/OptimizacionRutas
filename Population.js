@@ -19,6 +19,8 @@ class Population {
 
         this.distancesMatrix = this.setupDistancesMatrix()
         this.passengerMatrix = this.setupPassengerMatrix()
+        console.log(JSON.stringify(this.distancesMatrix))
+        console.log(JSON.stringify(this.passengerMatrix))
         this.totalPassengers = this.setupPassengerTotal(this.passengerMatrix)
         for (let i = 0; i < this.lines.length; i++) {
             let arr = [];
@@ -59,7 +61,7 @@ class Population {
             array[i] = new Array(this.distanceLength)
             for (let j = 0; j < array[i].length; j++) {
                 if(i == j) array[i][j] = 0
-                array[i][j] = Math.floor(Math.random() * 150) + 80;
+                else array[i][j] = Math.floor(Math.random() * 30) + 10;
             }
         }        
 
@@ -148,10 +150,7 @@ class Population {
     }
 
     printData(){
-
-            console.log(this.lines)
-        
-    
+            // console.log(this.lines)  
     }
 
     //Funcion para calcular mediante probabilidad si un line debe tener hijos

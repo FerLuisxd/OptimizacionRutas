@@ -93,8 +93,7 @@ class Map {
       let currentDistrict = this.bestLine.pathArray[i]      
       let nextDistrict = this.bestLine.pathArray[i+1]
       stroke('red')      
-      let weight = this.passengerMatrix[currentDistrict][nextDistrict]/totalPassengers * 400
-      console.log('weight',weight)
+      let weight = this.passengerMatrix[currentDistrict][nextDistrict]/totalPassengers * 350
       strokeWeight(weight);
       line(this.districts[currentDistrict].pos.x, this.districts[currentDistrict].pos.y, this.districts[nextDistrict].pos.x, this.districts[nextDistrict].pos.y)
 
@@ -185,11 +184,11 @@ function draw() {
   // test.update();
   // test.show();
   strokeWeight(4  )
-  text("generation: " + test.gen, 20, 20);
+  text("generation: " + test.gen, 20, 15);
   text("maxFitness: " + test.minStep, 20, 30);
-  text("Fps: " + frameRate(), 20, 40);
-  text("Max passengers: " + maxLocated + " out of " + totalPassengers, 20, 50);
-  text("Best line distance: " + test.bestDistance, 20, 60);
+  text("Fps: " + frameRate(), 20, 45);
+  text("Max passengers: " + maxLocated + " out of " + totalPassengers, 20, 60);
+  text("Best line distance: " + test.bestDistance, 20, 75);
 }
 
 //Funcion para dar click al mouse
