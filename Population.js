@@ -21,8 +21,8 @@ class Population {
         this.totalPassengers = this.setupPassengerTotal(this.passengerMatrix)
         for (let i = 0; i < this.lines.length; i++) {
             let arr = [];
-            while(arr.length < 8){
-                var r = Math.floor(Math.random() * 8);
+            while(arr.length < this.distancesMatrix.length){
+                var r = Math.floor(Math.random() * this.distancesMatrix.length);
                 if(arr.indexOf(r) === -1) arr.push(r);
             }
             //TODO AGREGAR RANDOM SAMPLE DE 0 A AVENIDESCOUNT
@@ -39,20 +39,17 @@ class Population {
             array[i] = new Array(this.distanceLength)
             for (let j = 0; j < array[i].length; j++) {
                 if(i == j) array[i][j] = 0
-                else array[i][j] = Math.floor(Math.random() * 201);  
+                else array[i][j] = Math.floor(Math.random() * 251) + 50;  
             }
         }
-        let distancesMatrix = [
-            [0, 101, 42, 76, 24, 38, 89, 110],
-            [101, 0, 107, 39, 77, 69, 92, 33],
-            [42, 107, 0, 72, 52, 38, 97, 116],
-            [76, 39, 72, 0, 86, 38, 131, 44],
-            [24, 77, 52, 86, 0, 48, 65, 86],
-            [38, 69, 38, 38, 48, 0, 93, 78],
-            [89, 92, 97, 131, 65, 93, 0, 125],
-            [110, 33, 116, 44, 86, 78, 125, 0]
-        ]
-        console.log(array,distancesMatrix)
+
+        for (let i = 0; i < array.length; i++) {
+            for (let j = i + 1; j < array.length; j++) {
+                array[j][i] = array[i][j]
+            }
+        }
+        
+        console.log(array)
         return array
     }
     setupPassengerMatrix() {
@@ -60,21 +57,13 @@ class Population {
         for (let i = 0; i < array.length; i++) {
             array[i] = new Array(this.distanceLength)
             for (let j = 0; j < array[i].length; j++) {
-                array[i][j] = Math.floor(Math.random() * 51);  
+                if(i == j) array[i][j] = 0
+                array[i][j] = Math.floor(Math.random() * 150) + 80;
             }
-        }
-        let passengerMatrix = [
-            [0, 9, 6, 10, 4, 54, 21, 51],
-            [28, 0, 16, 44, 4, 41, 4, 24],
-            [26, 51, 0, 50, 14, 56, 16, 1],
-            [39, 14, 12, 0, 25, 40, 52, 8],
-            [19, 55, 60, 42, 0, 37, 32, 37],
-            [6, 10, 59, 36, 60, 0, 18, 10],
-            [35, 37, 25, 5, 32, 9, 0, 3],
-            [43, 4, 27, 17, 6, 42, 9, 0]
-        ]
-        console.log(array,passengerMatrix)
-        return passengerMatrix
+        }        
+
+        console.log(array)
+        return array
     }
     setupPassengerTotal(passengerMatrix){
         let total = 0 
