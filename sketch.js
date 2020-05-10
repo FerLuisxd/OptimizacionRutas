@@ -31,24 +31,34 @@ class District {
   x;
   y;
   pos;
+  width
+  id
 
-  constructor(x,y){
+  constructor(x,y,width,id){
+    this.width = width
+    this.id = id
     this.pos = new createVector(x,y);
   }
 
   show(){
+    strokeWeight(2)
     fill(255,252,179);
-    ellipse(this.pos.x, this.pos.y, 25,25);
+    ellipse(this.pos.x, this.pos.y, 25);
+    strokeWeight(4)
+    text('ID:'+this.id,this.pos.x , this.pos.y)
   }
 }
 
 class Map {
   districts;
   bestLine; 
+  distancesMatrix
+  passengerMatrix
 
-
-  constructor(districts_size){
+  constructor(districts_size,distancesMatrix,passengerMatrix){
     this.districts = new Array(districts_size);
+    this.distancesMatrix = distancesMatrix
+    this.passengerMatrix = passengerMatrix
   }
 
   drawLines(){
@@ -57,6 +67,7 @@ class Map {
       for (let j = i+1; j < this.districts.length; j++)
       {
         stroke('#d3d3d3 ');
+        strokeWeight(0.3);
         line(this.districts[i].pos.x, this.districts[i].pos.y, this.districts[j].pos.x, this.districts[j].pos.y)
       }
     }
@@ -79,9 +90,19 @@ class Map {
     
     for (let i = 0; i<this.bestLine.pathArray.length-1; i++)
     {      
+      let currentDistrict = this.bestLine.pathArray[i]      
+      let nextDistrict = this.bestLine.pathArray[i+1]
       stroke('red')      
-      strokeWeight(4);
-      line(this.districts[this.bestLine.pathArray[i]].pos.x, this.districts[this.bestLine.pathArray[i]].pos.y, this.districts[this.bestLine.pathArray[i+1]].pos.x, this.districts[this.bestLine.pathArray[i+1]].pos.y)
+      let weight = this.passengerMatrix[currentDistrict][nextDistrict]/totalPassengers * 400
+      console.log('weight',weight)
+      strokeWeight(weight);
+      line(this.districts[currentDistrict].pos.x, this.districts[currentDistrict].pos.y, this.districts[nextDistrict].pos.x, this.districts[nextDistrict].pos.y)
+
+      let midX = (this.districts[currentDistrict].pos.x + this.districts[nextDistrict].pos.x)/2
+      let midY = (this.districts[currentDistrict].pos.y + this.districts[nextDistrict].pos.y)/2
+      strokeWeight(0.5)
+      text('Distance:'+this.distancesMatrix[currentDistrict][nextDistrict],midX, midY)
+      this.distancesMatrix
     }
   }
 
@@ -98,14 +119,14 @@ function setup() {
     
   createCanvas(windowWidth*factor, windowHeight*factor);
   frameRate(fr);
-  test = new Population(20,8)
+  test = new Population(20,12)
   distancesMatrix = test.distancesMatrix
   passengerMatrix = test.passengerMatrix
   totalPassengers = test.totalPassengers
-  this.map = new Map(distancesMatrix.length);
-  dy = 250;
-  dx = 350;
-  y = 80;
+  this.map = new Map(distancesMatrix.length,distancesMatrix,passengerMatrix);
+  dy = windowHeight*factor/distancesMatrix.length*2;
+  dx = windowWidth*factor/distancesMatrix.length*2;
+  y = windowHeight*factor*0.3;
   x = 0;
   count = 0;
   max = int(distancesMatrix.length/4);
@@ -122,7 +143,7 @@ function setup() {
       x = dx;
       count = 1;
     }
-    this.map.districts[i] = new District(x,y);
+    this.map.districts[i] = new District(x,y,passengerMatrix[i][i]/totalPassengers,i);
    }
 
   
@@ -136,7 +157,7 @@ function draw() {
   if(start){
 
   //Condicional para realizar las actualizaciones correspondientes
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 2; i++) {
 
     last_gen_lines = test.lines;
     // Se selecciona 
@@ -163,10 +184,12 @@ function draw() {
   this.map.drawDots();
   // test.update();
   // test.show();
+  strokeWeight(4  )
   text("generation: " + test.gen, 20, 20);
-  text("Last maxLocated: " + maxLocated + " out of " + totalPassengers, 20, 50);
   text("maxFitness: " + test.minStep, 20, 30);
   text("Fps: " + frameRate(), 20, 40);
+  text("Max passengers: " + maxLocated + " out of " + totalPassengers, 20, 50);
+  text("Best line distance: " + test.bestDistance, 20, 60);
 }
 
 //Funcion para dar click al mouse

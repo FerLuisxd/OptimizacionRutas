@@ -10,6 +10,7 @@ class Population {
     passengerMatrix
     totalPassengers
     distanceLength
+    bestDistance
 
     constructor(size, distanceLength) {
         this.lines = new Array(size); //Arreglo de lineas
@@ -190,6 +191,7 @@ class Population {
         this.minStep = this.lines[this.bestLine].fitness;
         //Se asigna a la variable global el maximo de comida recolectada por el line
         this.maxLocated = this.lines[this.bestLine].passengers;
+        this.bestDistance = this.lines[this.bestLine].distance;
     }
 
     returnLines(){
