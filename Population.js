@@ -187,12 +187,17 @@ class Population {
                 maxIndex = i;
             }
         }
+
         //Se asigna a la variable global el index donde esta el mejor line
         this.bestLine = maxIndex;
         //Se asigna a la variable global el fitness del mejor line
         this.minStep = this.lines[this.bestLine].fitness;
         //Se asigna a la variable global el maximo de comida recolectada por el line
         this.maxLocated = this.lines[this.bestLine].passengers;
+    }
+
+    returnLines(){
+        return this.lines;
     }
 
 }
