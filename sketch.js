@@ -85,9 +85,8 @@ class Map {
     this.bestLine = last_gen_lines[index_bestline];    
     
   }
-
+// Se pinta de otro color mas fuerte el mejor de la generacion
   drawBest(){   
-    
     for (let i = 0; i<this.bestLine.pathArray.length-1; i++)
     {      
       let currentDistrict = this.bestLine.pathArray[i]      
@@ -115,13 +114,13 @@ class Map {
 
 //Funcion para cargar infomacion previamente
 function setup() {
-    
   createCanvas(windowWidth*factor, windowHeight*factor);
   frameRate(fr);
   test = new Population(20,12)
   distancesMatrix = test.distancesMatrix
   passengerMatrix = test.passengerMatrix
   totalPassengers = test.totalPassengers
+  //Generacion de mapa a mostrar en el html
   this.map = new Map(distancesMatrix.length,distancesMatrix,passengerMatrix);
   dy = windowHeight*factor/distancesMatrix.length*2;
   dx = windowWidth*factor/distancesMatrix.length*2;
@@ -156,15 +155,14 @@ function draw() {
   if(start){
 
   //Condicional para realizar las actualizaciones correspondientes
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 2; i++) {//Se avanza de 2 en 2 lineas
 
     last_gen_lines = test.lines;
     // Se selecciona 
-    test.printData()      
     test.naturalSelection();
     // Mutamos los hijos
     test.mutateBabies();
-    // Reestablecemos de la posicion de los fantasmas
+    //Data a imprimir
     maxLocated = test.maxLocated
     index_bestline = test.bestLine;       
     }
@@ -181,8 +179,6 @@ function draw() {
     this.map.drawBest();
   }
   this.map.drawDots();
-  // test.update();
-  // test.show();
   strokeWeight(4  )
   text("generation: " + test.gen, 20, 15);
   text("maxFitness: " + test.minStep, 20, 30);

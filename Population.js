@@ -16,7 +16,7 @@ class Population {
         this.lines = new Array(size); //Arreglo de lineas
         console.log(width, height)
         this.distanceLength = distanceLength
-
+        //Generacion aleatorea la distancia y pasajeros en el mapa
         this.distancesMatrix = this.setupDistancesMatrix()
         this.passengerMatrix = this.setupPassengerMatrix()
         console.log(JSON.stringify(this.distancesMatrix))
@@ -88,21 +88,11 @@ class Population {
         this.lines[0].show();
     }
 
-    //Funcion de update en la cual se actualizan los lines y los fantasmas
+    //Funcion de update en la cual se actualizan los lines
     update() {
         for (let i = 0; i < this.lines.length; i++) {
             this.lines[i].update();
         }
-    }
-
-    //Funcion con la cual se comprueba si todos los lines ya han muerto
-    allLinesDead() {
-        // for (let i = 0; i < this.lines.length; i++) {
-        //     if (!this.lines[i].dead)
-        //         return false;
-        // }
-        return true;
-
     }
 
     //Funcion en la cual se realiza la seleccion para futuras generaciones 
@@ -131,7 +121,6 @@ class Population {
         }
         //Reemplazamos los antiguos lines con los nuevos
         this.lines = [].concat(newLines)
-        //console.log(this.lines.length)
         //Pasamos a la siguiente generacion
         this.gen++;
         } catch (error) {

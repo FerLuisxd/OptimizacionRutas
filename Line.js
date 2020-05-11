@@ -34,6 +34,8 @@ class Line {
         baby.pathArray = [...this.pathArray]
         return baby;
     }
+
+    // Cambia la posicion del pathArray
     mutate() {
         let mutationRate = 0.1
         for (let i = 0; i < this.pathArray.length; i++) {
@@ -46,13 +48,14 @@ class Line {
         }
         this.pathArray
     }
+    //Calculamos el fitness con la logica mencionada en el documento
     calcFitness(){
         let fitnessMul = 1.0
         let knownCities = []
         this.distance = 0
         this.passengers = 0
         for (let i = 0; i < distancesMatrix.length-1; i++) {
-            if(knownCities.includes(this.pathArray[i])){
+            if(knownCities.includes(this.pathArray[i])){ //Se verifica que no se repitan, y si es asi lo penalizamos
                 fitnessMul = fitnessMul * 0.65
             }
             else 
