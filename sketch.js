@@ -99,6 +99,7 @@ class Map {
 
       let midX = (this.districts[currentDistrict].pos.x + this.districts[nextDistrict].pos.x)/2
       let midY = (this.districts[currentDistrict].pos.y + this.districts[nextDistrict].pos.y)/2
+      stroke('black')
       strokeWeight(0.5)
       text('Distance:'+this.distancesMatrix[currentDistrict][nextDistrict],midX, midY)
       this.distancesMatrix
