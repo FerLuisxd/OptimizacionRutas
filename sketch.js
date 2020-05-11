@@ -175,6 +175,7 @@ function draw() {
     start = false 
     drawbestline = true;
     this.map.setBest(last_gen_lines, index_bestline);
+    console.log(this.map.bestLine.pathArray)
   }
   this.map.drawLines();
   if (drawbestline == true){
@@ -183,12 +184,16 @@ function draw() {
   this.map.drawDots();
   // test.update();
   // test.show();
-  strokeWeight(4  )
+  strokeWeight(4)
   text("generation: " + test.gen, 20, 15);
   text("maxFitness: " + test.minStep, 20, 30);
   text("Fps: " + frameRate(), 20, 45);
   text("Max passengers: " + maxLocated + " out of " + totalPassengers, 20, 60);
   text("Best line distance: " + test.bestDistance, 20, 75);
+  if (drawbestline == true){
+    text("Best Path [" + this.map.bestLine.pathArray + " ]", 20, 90 );
+  }
+  
 }
 
 //Funcion para dar click al mouse
